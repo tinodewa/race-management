@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "335336839915",
+    "project_id": "race-management-61b0a",
+    "storage_bucket": "race-management-61b0a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335336839915:android:0105b9ac95ca0d373f7cae",
+        "android_client_info": {
+          "package_name": "com.hit.racemanagement"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_l2_9xwD4pwgutdOdXKPqg_3et5-ry2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

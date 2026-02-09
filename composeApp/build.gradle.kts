@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.ktorfit)
     alias(libs.plugins.buildConfig)
+    alias(libs.plugins.googleServices)
 }
 
 //val secretsFile = rootProject.file("secrets.properties")
@@ -64,6 +65,13 @@ kotlin {
             // Room dependencies
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.ktx)
+
+            // TAMBAHKAN BOM INI (Wajib untuk mengatur versi otomatis)
+            implementation(project.dependencies.platform(libs.firebase.bom))
+
+            // Core Firebase GitLive (hanya interface, implementasi ada di android/web)
+            implementation(libs.firebase.firestore)
+            implementation(libs.firebase.auth)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -127,6 +135,10 @@ kotlin {
 
             // Kotlinx datetime
             implementation(libs.kotlinx.datetime)
+
+            // KITA TIDAK PAKAI GITLIVE DI SINI
+            // Kita pakai Admin SDK resmi Google untuk Java
+            implementation(libs.firebase.admin)
         }
         wasmJsMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
