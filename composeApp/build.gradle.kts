@@ -46,14 +46,13 @@ kotlin {
     
     jvm()
     
-    js {
-        browser()
-        binaries.executable()
-    }
-    
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        browser()
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+            }
+        }
         binaries.executable()
     }
     
@@ -72,6 +71,9 @@ kotlin {
             // Core Firebase GitLive (hanya interface, implementasi ada di android/web)
             implementation(libs.firebase.firestore)
             implementation(libs.firebase.auth)
+
+            // 3. Ktor Engine (CIO works on both Android & Desktop)
+            implementation(libs.ktor.client.cio)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -102,9 +104,6 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
-
-            // 3. Ktor Engine (CIO works on both Android & Desktop)
-            implementation(libs.ktor.client.cio)
 
             // Napier for Logging
             implementation(libs.napier)
@@ -139,6 +138,11 @@ kotlin {
             // KITA TIDAK PAKAI GITLIVE DI SINI
             // Kita pakai Admin SDK resmi Google untuk Java
             implementation(libs.firebase.admin)
+
+            // 3. Ktor Engine (CIO works on both Android & Desktop)
+            implementation(libs.ktor.client.cio)
+
+//            implementation(libs.kotlin.stdlib.js)
         }
         wasmJsMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
@@ -178,55 +182,6 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 }
 
-
-compose.desktop {
-    application {
-        mainClass = "com.hit.racemanagement.MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.hit.racemanagement"
-            packageVersion = "1.0.0"
-
-            description = "Race Management App"
-            copyright = "© 2026 Hit Inc."
-            vendor = "Race Management"
-
-            // add an app icon
-            // macOS needs .icns, Windows needs .ico
-            macOS {
-                iconFile.set(project.file("launcher-icons/icon.icns"))
-                bundleID = "com.railway.desktop"
-                dockName = "Railway"
-            }
-            windows {
-                iconFile.set(project.file("launcher-icons/icon.ico"))
-                menuGroup = "Railway"
-            }
-            linux {
-                // Points to composeApp/launcher-icons/icon.png
-                iconFile.set(project.file("launcher-icons/icon.png"))
-            }
-        }
-
-        nativeDistributions {
-            // ... your existing settings (packageName, version, etc) ...
-
-            // ✅ ADD THIS LINE:
-            modules("java.sql")
-
-            // If you still get errors, you might need these too (common for SQLite/JDBC):
-            // modules("java.sql", "java.naming")
-        }
-
-        // Optimize for Production
-        buildTypes.release.proguard {
-            configurationFiles.from(project.file("compose-desktop.pro"))
-            obfuscate.set(false) // Keep false unless you strictly need it; it breaks reflection often
-            optimize.set(true)
-        }
-    }
-}
 
 compose.desktop {
     application {
