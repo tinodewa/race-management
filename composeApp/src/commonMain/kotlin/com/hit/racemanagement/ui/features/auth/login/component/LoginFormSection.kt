@@ -1,6 +1,8 @@
 package com.hit.racemanagement.ui.features.auth.login.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,11 +35,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import com.hit.racemanagement.ui.features.auth.register.RegisterScreen
 import com.hit.racemanagement.ui.theme.PrimaryRed
 import com.hit.racemanagement.ui.theme.SecondaryBlue
 
 @Composable
 fun LoginFormSection() {
+    val navigator = LocalNavigator.currentOrThrow
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -111,6 +118,19 @@ fun LoginFormSection() {
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("New Racer?", color = Color.Gray)
+            TextButton(onClick = { navigator.push(RegisterScreen()) }) {
+                Text("Register Now", fontWeight = FontWeight.Bold, color = SecondaryBlue)
+            }
         }
     }
 }
