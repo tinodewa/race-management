@@ -22,11 +22,16 @@ import com.hit.racemanagement.ui.theme.PrimaryRed
 import com.hit.racemanagement.ui.theme.SecondaryBlue
 
 @Composable
-fun DashboardCard(item: MenuItem, modifier: Modifier = Modifier, isDarkBg: Boolean) {
+fun DashboardCard(
+    item: MenuItem,
+    modifier: Modifier = Modifier,
+    isDarkBg: Boolean,
+    onClick: () -> Unit = { }
+    ) {
     Card(
         modifier = modifier
             .aspectRatio(1.2f) // Kotak agak persegi panjang
-            .clickable { /* TODO */ },
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(
             containerColor = if (isDarkBg) Color.White.copy(alpha = 0.1f) else Color.White
         ),

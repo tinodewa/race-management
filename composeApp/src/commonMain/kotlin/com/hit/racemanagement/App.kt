@@ -14,6 +14,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.SlideTransition
 import com.hit.racemanagement.ui.features.dashboard.DashboardScreen
 import org.jetbrains.compose.resources.painterResource
 
@@ -24,6 +26,10 @@ import racemanagement.composeapp.generated.resources.compose_multiplatform
 @Preview
 fun App() {
     MaterialTheme {
-        DashboardScreen()
+        // Start at ProductManagementScreen
+        Navigator(DashboardScreen()) { navigator ->
+            // Add default animation (Slide)
+            SlideTransition(navigator)
+        }
     }
 }

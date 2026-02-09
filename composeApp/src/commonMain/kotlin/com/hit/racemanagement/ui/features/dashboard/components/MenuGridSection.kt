@@ -16,16 +16,47 @@ import androidx.compose.material.icons.filled.Timer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import com.hit.racemanagement.ui.features.leaderboard.LeaderboardScreen
 
 @Composable
 fun MenuGridSection(modifier: Modifier = Modifier, columns: Int, useDarkTheme: Boolean = false) {
+    val navigator = LocalNavigator.currentOrThrow
+
     val menuItems = listOf(
-        MenuItem("Leaderboard", Icons.Default.Leaderboard),
-        MenuItem("My Profile", Icons.Default.Person),
-        MenuItem("Scan QR", Icons.Default.QrCodeScanner), // Marshal Only?
-        MenuItem("Rules", Icons.Default.Flag),
-        MenuItem("Schedule", Icons.Default.Timer),
-        MenuItem("Settings", Icons.Default.Settings),
+        MenuItem(
+            "Leaderboard",
+            Icons.Default.Leaderboard,
+            {
+                navigator.push(LeaderboardScreen())
+            }
+        ),
+        MenuItem(
+            "My Profile",
+            Icons.Default.Person,
+            {}
+        ),
+        MenuItem(
+            "Scan QR",
+            Icons.Default.QrCodeScanner,
+            {}
+        ), // Marshal Only?
+        MenuItem(
+            "Rules",
+            Icons.Default.Flag,
+            {}
+        ),
+        MenuItem(
+            "Schedule",
+            Icons.Default.Timer,
+            {}
+        ),
+        MenuItem(
+            "Settings",
+            Icons.Default.Settings,
+            {}
+        ),
     )
 
     // Kita pakai Column + Loop manual atau FlowRow jika LazyGrid bermasalah di dalam Scrollable Column
@@ -42,7 +73,8 @@ fun MenuGridSection(modifier: Modifier = Modifier, columns: Int, useDarkTheme: B
                     DashboardCard(
                         item = item,
                         modifier = Modifier.weight(1f),
-                        isDarkBg = useDarkTheme
+                        isDarkBg = useDarkTheme,
+                        onClick = item.onClick
                     )
                 }
                 // Isi kekosongan jika ganjil
