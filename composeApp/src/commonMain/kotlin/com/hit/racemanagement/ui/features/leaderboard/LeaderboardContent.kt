@@ -35,20 +35,26 @@ import com.hit.racemanagement.ui.features.leaderboard.component.dummyResults
 import com.hit.racemanagement.ui.theme.SecondaryBlue
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.hit.racemanagement.ui.shared.RmsScaffold
+import com.hit.racemanagement.ui.theme.CleanGray
+import com.hit.racemanagement.ui.theme.OffWhite
 
 @Composable
 fun LeaderboardContent() {
     val navigator = LocalNavigator.currentOrThrow
-
-    BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF5F5F5)) // Abu-abu muda clean
-    ) {
-        if (maxWidth < 800.dp) {
-            LeaderboardCompact(dummyResults, onBackClick = { navigator.pop() })
-        } else {
-            LeaderboardExpanded(dummyResults, onBackClick = { navigator.pop() })
+    RmsScaffold(
+        backgroundColor = OffWhite // Warna khusus Dashboard
+    ) { innerPadding ->
+        BoxWithConstraints(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            if (maxWidth < 800.dp) {
+                LeaderboardCompact(dummyResults, onBackClick = { navigator.pop() })
+            } else {
+                LeaderboardExpanded(dummyResults, onBackClick = { navigator.pop() })
+            }
         }
     }
 }

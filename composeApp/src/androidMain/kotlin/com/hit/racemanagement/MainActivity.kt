@@ -12,6 +12,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
+        // Aktifkan Edge-to-Edge
+        enableEdgeToEdge()
+
         setContent {
             App()
         }

@@ -1,4 +1,4 @@
-package com.hit.racemanagement.ui.features.dashboard.components
+package com.hit.racemanagement.ui.features.dashboard.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
