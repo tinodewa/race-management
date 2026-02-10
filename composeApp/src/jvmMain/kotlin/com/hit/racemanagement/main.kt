@@ -5,11 +5,20 @@ import androidx.compose.ui.window.application
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
+import com.hit.racemanagement.di.initKoin
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
 import java.io.InputStream
 
 fun main() = application {
     // 1. Inisialisasi Firebase Admin SDK (Hanya sekali di awal)
     initializeFirebaseAdmin()
+
+    // Initializes Logging for Desktop (System.out)
+    Napier.base(DebugAntilog())
+
+    // Init Koin
+    initKoin()
 
     Window(
         onCloseRequest = ::exitApplication,

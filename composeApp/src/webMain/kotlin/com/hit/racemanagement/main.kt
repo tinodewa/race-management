@@ -2,6 +2,9 @@ package com.hit.racemanagement
 
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
+import com.hit.racemanagement.di.initKoin
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
 import kotlinx.browser.document
 import kotlin.js.js
 import org.jetbrains.skiko.wasm.onWasmReady
@@ -56,6 +59,12 @@ fun initializeFirebase(configJson: String) {
 fun main() {
     // 3. Panggil fungsi inisialisasi SEBELUM UI
     initializeFirebase(firebaseConfigJson)
+
+    // Initializes Logging for Android (Logcat)
+    Napier.base(DebugAntilog())
+
+    // Init Koin
+    initKoin()
 
     // 4. Jalankan UI (ComposeViewport)
     // Gunakan onWasmReady untuk memastikan env siap (opsional tapi recommended di template baru)
