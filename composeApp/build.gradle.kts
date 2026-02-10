@@ -1,4 +1,7 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -55,26 +58,18 @@ kotlin {
         }
         binaries.executable()
     }
-    
-    sourceSets {
-        androidMain.dependencies {
-            implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.activity.compose)
 
-            // Room dependencies
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.ktx)
-
-            // TAMBAHKAN BOM INI (Wajib untuk mengatur versi otomatis)
-            implementation(project.dependencies.platform(libs.firebase.bom))
-
-            // Core Firebase GitLive (hanya interface, implementasi ada di android/web)
-            implementation(libs.firebase.firestore)
-            implementation(libs.firebase.auth)
-
-            // 3. Ktor Engine (CIO works on both Android & Desktop)
-            implementation(libs.ktor.client.cio)
+    // --- SOLUSI UTAMA: DEFINISIKAN HIERARKI MANUAL ---
+    // Ini akan menimpa default template yang mungkin "sotoy" membuatkan webMain
+    applyDefaultHierarchyTemplate {
+        common {
+            withAndroidTarget()
+            withJvm()
+            withWasmJs() // Paksa wasmJs langsung di bawah common, tanpa middleman 'webMain'
         }
+    }
+
+    sourceSets {
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -124,6 +119,24 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+        androidMain.dependencies {
+            implementation(libs.compose.uiToolingPreview)
+            implementation(libs.androidx.activity.compose)
+
+            // Room dependencies
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.room.ktx)
+
+            // TAMBAHKAN BOM INI (Wajib untuk mengatur versi otomatis)
+            implementation(project.dependencies.platform(libs.firebase.bom))
+
+            // Core Firebase GitLive (hanya interface, implementasi ada di android/web)
+            implementation(libs.firebase.firestore)
+            implementation(libs.firebase.auth)
+
+            // 3. Ktor Engine (CIO works on both Android & Desktop)
+            implementation(libs.ktor.client.cio)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)

@@ -12,13 +12,13 @@ import org.jetbrains.skiko.wasm.onWasmReady
 // 1. Definisikan konfigurasi sebagai String JSON biasa
 const val firebaseConfigJson = """
 {
-    apiKey: "AIzaSyAMiNMjdPOaSQhw5U48mYEuD-WoIPlUURo",
-    authDomain: "race-management-61b0a.firebaseapp.com",
-    projectId: "race-management-61b0a",
-    storageBucket: "race-management-61b0a.firebasestorage.app",
-    messagingSenderId: "335336839915",
-    appId: "1:335336839915:web:847019cd2caf82813f7cae",
-    measurementId: "G-8TNTQFKZCQ"
+    "apiKey": "AIzaSyAMiNMjdPOaSQhw5U48mYEuD-WoIPlUURo",
+    "authDomain": "race-management-61b0a.firebaseapp.com",
+    "projectId": "race-management-61b0a",
+    "storageBucket": "race-management-61b0a.firebasestorage.app",
+    "messagingSenderId": "335336839915",
+    "appId": "1:335336839915:web:847019cd2caf82813f7cae",
+    "measurementId": "G-8TNTQFKZCQ"
 }
 """
 

@@ -1,11 +1,15 @@
 package com.hit.racemanagement.di
 
+import com.hit.racemanagement.data.repositories.AndroidAuthRepository
+import com.hit.racemanagement.data.repositories.AuthRepository
+import com.hit.racemanagement.platform.AndroidNetworkMonitor
+import com.hit.racemanagement.platform.NetworkMonitor
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
-// import data.repository.AndroidAuthRepository (Nanti kita buat)
-
 actual val platformModule: Module = module {
-    // single<AuthRepository> { AndroidAuthRepository() }
-    // (Komentari dulu biar gak error, kita buat filenya di langkah berikutnya)
+    single<NetworkMonitor> { AndroidNetworkMonitor(get()) }
+
+    // Bind Interface ke Implementasi
+    single<AuthRepository> { AndroidAuthRepository() }
 }
