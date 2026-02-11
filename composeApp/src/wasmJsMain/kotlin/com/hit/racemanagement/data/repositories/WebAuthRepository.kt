@@ -12,12 +12,11 @@ import kotlin.js.JsString
 @OptIn(ExperimentalWasmJsInterop::class)
 class WebAuthRepository : AuthRepository {
 
-    // Helper: Ubah Kotlin Object -> JSON String -> JS Object
-
-    private fun racerToJsObject(racer: Racer): JsAny {
-        val jsonString = Json.encodeToString(racer)
-        // Parse string JSON menjadi Object JS asli
-        return parseJson(jsonString)
+    // 1. Config JSON Formatter (Opsional tapi bagus untuk konsistensi)
+    private val jsonFormatter = Json {
+        encodeDefaults = true
+        ignoreUnknownKeys = true
+        isLenient = true
     }
 
     override suspend fun registerRacer(password: String, racer: Racer): Result<String> {
@@ -28,13 +27,22 @@ class WebAuthRepository : AuthRepository {
             // Kita pakai .await() lalu convert ke String Kotlin
             val uidJs = createUserJs(email, password).await<JsString>()
             val uid = uidJs.toString() // Convert JsString ke Kotlin String
+            println("uid: $uid")
 
             // 2. Simpan ke Firestore
             val newRacer = racer.copy(id = uid)
-            val racerJs = racerToJsObject(newRacer)
 
-            saveRacerFirestoreJs(uid, racerJs).await<JsAny?>()
+            // Encode ke String JSON (Kotlin)
+            val jsonString = jsonFormatter.encodeToString(newRacer)
 
+            println("Mengirim data ke Firestore untuk UID: $uid")
+            println("Payload JSON: $jsonString")
+
+            println("coba save ke Firestore...")
+
+            saveRacerFirestoreJs(uid, jsonString).await<JsAny?>()
+
+            println("✅ Register Sukses untuk UID: $uid")
             Result.success(uid)
         } catch (e: Exception) {
             println("Error Register: ${e.message}") // Ganti console.error dengan println
@@ -64,14 +72,6 @@ class WebAuthRepository : AuthRepository {
 
 // --- FUNGSI INTEROP (WASM STRICT TYPES) ---
 
-// Helper untuk JSON.parse
-@OptIn(ExperimentalWasmJsInterop::class)
-fun parseJson(jsonString: String): JsAny = js("""
-    {
-        JSON.parse(jsonString)
-    }
-""")
-
 // Return tipe harus Promise<JsString> (bukan String biasa)
 @OptIn(ExperimentalWasmJsInterop::class)
 fun createUserJs(email: String, password: String): Promise<JsString> = js("""
@@ -91,9 +91,13 @@ fun signInJs(email: String, password: String): Promise<JsString> = js("""
 
 // JsAny digunakan untuk data object
 @OptIn(ExperimentalWasmJsInterop::class)
-fun saveRacerFirestoreJs(uid: String, data: JsAny): Promise<JsAny?> = js("""
+fun saveRacerFirestoreJs(uid: String, jsonString: String): Promise<JsAny?> = js("""
     {
-        return firebase.firestore().collection("racers").doc(uid).set(data);
+        // 1. UBAH STRING JADI OBJECT JS MURNI
+        var dataObject = JSON.parse(jsonString);
+   
+        // 2. KIRIM OBJECT (BUKAN STRING) KE FIRESTORE
+        return firebase.firestore().collection("racers").doc(uid).set(dataObject);
     }
 """)
 

@@ -11,5 +11,5 @@ data class Racer(
     val vehicleModel: String, // "CRF 150L"
     val email: String,
     val role: String = "racer", // "racer", "marshal", "committee"
-    val registeredAt: Long = 0L // Timestamp
+    val registeredAt: String, // Timestamp
 )

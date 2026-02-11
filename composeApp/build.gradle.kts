@@ -108,7 +108,7 @@ kotlin {
 
             // Voyager Navigation
             implementation(libs.voyager.navigator)
-//            implementation(libs.voyager.koin)
+            implementation(libs.voyager.koin)
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.screenmodel)
             implementation(libs.voyager.bottom.sheet.navigator)

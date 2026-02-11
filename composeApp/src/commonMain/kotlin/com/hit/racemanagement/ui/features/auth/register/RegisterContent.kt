@@ -2,7 +2,6 @@ package com.hit.racemanagement.ui.features.auth.register
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,37 +30,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hit.racemanagement.ui.features.auth.register.component.RegisterFormSection
-import com.hit.racemanagement.ui.shared.RmsScaffold
 import com.hit.racemanagement.ui.theme.PrimaryRed
 import com.hit.racemanagement.ui.theme.SecondaryBlue
 
-@Composable
-fun RegisterContent() {
-    val navigator = LocalNavigator.currentOrThrow
-
-    RmsScaffold(backgroundColor = Color.White) {
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-            if (maxWidth < 800.dp) {
-                RegisterCompact(
-                    onBackClick = { navigator.pop() },
-                    onLoginClick = { navigator.pop() } // Balik ke login
-                )
-            } else {
-                RegisterExpanded(
-                    onBackClick = { navigator.pop() },
-                    onLoginClick = { navigator.pop() }
-                )
-            }
-        }
-    }
-}
-
 // --- TAMPILAN MOBILE (Compact) ---
 @Composable
-fun RegisterCompact(onBackClick: () -> Unit, onLoginClick: () -> Unit) {
+fun RegisterCompact(
+    onBackClick: () -> Unit,
+    onLoginClick: () -> Unit,
+    screenModel: RegisterScreenModel,
+    state: RegisterStates
+    ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -91,7 +71,10 @@ fun RegisterCompact(onBackClick: () -> Unit, onLoginClick: () -> Unit) {
             modifier = Modifier.padding(top = 8.dp, bottom = 32.dp)
         )
 
-        RegisterFormSection()
+        RegisterFormSection(
+            screenModel = screenModel,
+            state = state
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -108,7 +91,12 @@ fun RegisterCompact(onBackClick: () -> Unit, onLoginClick: () -> Unit) {
 
 // --- TAMPILAN DESKTOP (Expanded) ---
 @Composable
-fun RegisterExpanded(onBackClick: () -> Unit, onLoginClick: () -> Unit) {
+fun RegisterExpanded(
+    onBackClick: () -> Unit,
+    onLoginClick: () -> Unit,
+    screenModel: RegisterScreenModel,
+    state: RegisterStates
+) {
     Row(modifier = Modifier.fillMaxSize()) {
         // Kiri: Visual (Sama patternnya dengan Login tapi beda teks/warna)
         Box(
@@ -182,7 +170,10 @@ fun RegisterExpanded(onBackClick: () -> Unit, onLoginClick: () -> Unit) {
                     modifier = Modifier.padding(bottom = 32.dp)
                 )
 
-                RegisterFormSection()
+                RegisterFormSection(
+                    screenModel = screenModel,
+                    state = state
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 

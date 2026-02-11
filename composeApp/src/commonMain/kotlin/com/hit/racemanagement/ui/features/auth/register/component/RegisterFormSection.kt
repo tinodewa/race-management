@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,11 +40,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.hit.racemanagement.common.state.UiState
+import com.hit.racemanagement.ui.features.auth.register.RegisterScreenModel
+import com.hit.racemanagement.ui.features.auth.register.RegisterStates
 import com.hit.racemanagement.ui.theme.PrimaryRed
 
 @Composable
-fun RegisterFormSection() {
+fun RegisterFormSection(
+    screenModel: RegisterScreenModel,
+    state: RegisterStates
+) {
     // State Variables
     var fullName by remember { mutableStateOf("") }
     var racerNumber by remember { mutableStateOf("") }
@@ -51,6 +58,8 @@ fun RegisterFormSection() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var confirmPassword by remember { mutableStateOf("") }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxWidth()) {
 
@@ -144,22 +153,65 @@ fun RegisterFormSection() {
             shape = RoundedCornerShape(12.dp)
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            label = { Text("Confirm Password") },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+            trailingIcon = {
+                IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                    Icon(
+                        if (confirmPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                        contentDescription = "Toggle Confirm Password"
+                    )
+                }
+            },
+            visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            shape = RoundedCornerShape(12.dp)
+        )
+
         Spacer(modifier = Modifier.height(32.dp))
 
         // Submit Button
         Button(
-            onClick = { /* TODO: Register Logic */ },
+            onClick = {
+                // Validasi password match sederhana di UI
+                if (password != confirmPassword) {
+                    val msg = "Password and Confirm Password do not match"
+                    screenModel.updateUIState(UiState.Error(0, msg))
+                    return@Button
+                }
+
+                screenModel.register(
+                    fullName = fullName,
+                    racerNumber = racerNumber,
+                    teamName = teamName,
+                    vehicle = vehicle,
+                    email = email,
+                    password = password
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(containerColor = PrimaryRed)
         ) {
-            Text(
-                "JOIN RACE",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
+            if (state.registerUIState is UiState.Loading) {
+                // Tampilkan Loading Spinner
+                CircularProgressIndicator(
+                    color = Color.White,
+                    modifier = Modifier.size(24.dp),
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text("JOIN RACE", color = Color.White, fontWeight = FontWeight.Bold)
+            }
         }
     }
 }
