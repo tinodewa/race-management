@@ -23,25 +23,13 @@ import com.hit.racemanagement.ui.shared.RmsScaffold
 import com.hit.racemanagement.ui.theme.PrimaryRed
 import com.hit.racemanagement.ui.theme.SecondaryBlue
 
-@Composable
-fun LoginContent() {
-    val navigator = LocalNavigator.currentOrThrow
-
-    // Gunakan Wrapper Scaffold kita
-    RmsScaffold(backgroundColor = Color.White) {
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-            if (maxWidth < 800.dp) {
-                LoginCompact(onBackClick = { navigator.pop() })
-            } else {
-                LoginExpanded(onBackClick = { navigator.pop() })
-            }
-        }
-    }
-}
-
 // --- TAMPILAN MOBILE (Compact) ---
 @Composable
-fun LoginCompact(onBackClick: () -> Unit) {
+fun LoginCompact(
+    onBackClick: () -> Unit,
+    isLoading: Boolean,
+    onLoginClick: (String, String) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -73,13 +61,20 @@ fun LoginCompact(onBackClick: () -> Unit) {
         )
 
         // Form Section
-        LoginFormSection()
+        LoginFormSection(
+            isLoading = isLoading,
+            onLoginClick = onLoginClick
+        )
     }
 }
 
 // --- TAMPILAN DESKTOP (Expanded - Split View) ---
 @Composable
-fun LoginExpanded(onBackClick: () -> Unit) {
+fun LoginExpanded(
+    onBackClick: () -> Unit,
+    isLoading: Boolean,
+    onLoginClick: (String, String) -> Unit
+) {
     Row(modifier = Modifier.fillMaxSize()) {
         // Kiri: Visual / Hero Image
         Box(
@@ -142,7 +137,10 @@ fun LoginExpanded(onBackClick: () -> Unit) {
                     color = SecondaryBlue,
                     modifier = Modifier.padding(bottom = 32.dp)
                 )
-                LoginFormSection()
+                LoginFormSection(
+                    isLoading = isLoading,
+                    onLoginClick = onLoginClick
+                )
             }
         }
     }

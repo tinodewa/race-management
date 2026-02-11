@@ -1,5 +1,6 @@
 package com.hit.racemanagement.di
 
+import com.hit.racemanagement.ui.features.auth.login.LoginScreenModel
 import com.hit.racemanagement.ui.features.auth.register.RegisterScreenModel
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
@@ -22,6 +23,7 @@ fun initKoin(config: KoinAppDeclaration = {}) : KoinApplication = startKoin {
 // 2. Modul Common: Isinya ScreenModel/ViewModel
 val commonModule = module {
     factoryOf(::RegisterScreenModel)
+    factoryOf(::LoginScreenModel)
 }
 
 // 3. Definisi Expect: "Saya harap ada variabel bernama platformModule di setiap platform"

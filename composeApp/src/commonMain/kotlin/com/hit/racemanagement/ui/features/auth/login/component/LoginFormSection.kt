@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -42,7 +44,10 @@ import com.hit.racemanagement.ui.theme.PrimaryRed
 import com.hit.racemanagement.ui.theme.SecondaryBlue
 
 @Composable
-fun LoginFormSection() {
+fun LoginFormSection(
+    isLoading: Boolean,
+    onLoginClick: (String, String) -> Unit,
+) {
     val navigator = LocalNavigator.currentOrThrow
 
     var email by remember { mutableStateOf("") }
@@ -54,7 +59,7 @@ fun LoginFormSection() {
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email / Racer ID") },
+            label = { Text("Email") },
             leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
@@ -62,7 +67,8 @@ fun LoginFormSection() {
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = SecondaryBlue,
                 focusedLabelColor = SecondaryBlue
-            )
+            ),
+            enabled = !isLoading
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -89,35 +95,45 @@ fun LoginFormSection() {
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = SecondaryBlue,
                 focusedLabelColor = SecondaryBlue
-            )
+            ),
+            enabled = !isLoading
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+//        Spacer(modifier = Modifier.height(8.dp))
 
         // Forgot Password
-        TextButton(
-            onClick = { /* TODO */ },
-            modifier = Modifier.align(Alignment.End)
-        ) {
-            Text("Forgot Password?", color = Color.Gray)
-        }
+//        TextButton(
+//            onClick = { /* TODO */ },
+//            modifier = Modifier.align(Alignment.End)
+//        ) {
+//            Text("Forgot Password?", color = Color.Gray)
+//        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         // Login Button
         Button(
-            onClick = { /* TODO: Handle Login Logic here (Check Role) */ },
+            onClick = { onLoginClick(email, password) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
             shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = PrimaryRed)
+            colors = ButtonDefaults.buttonColors(containerColor = PrimaryRed),
         ) {
-            Text(
-                "LOGIN",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
+            if (isLoading) {
+                // Tampilkan Loading Spinner
+                CircularProgressIndicator(
+                    color = Color.White,
+                    modifier = Modifier.size(24.dp),
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text(
+                    "LOGIN",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
